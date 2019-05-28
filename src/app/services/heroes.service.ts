@@ -10,7 +10,7 @@ export class HeroesService {
   constructor(private http: Http) {}
 
   /**
-   * Insertamos un Heroe nuevo pasando el objeto heroe
+   * insert new Heroe send all object json
    */
   nuevoHeroe(heroe: Heroe) {
     let body = JSON.stringify(heroe);
@@ -24,7 +24,7 @@ export class HeroesService {
     });
   }
   /**
-   * Actualizamos el heroe mandando todo el objeto json
+   * update heroe send all object json
    * @param heroe
    * @param key$
    */
@@ -42,7 +42,7 @@ export class HeroesService {
     });
   }
 /**
- * Obtenemos el Heroe mediante el ID
+ * Get the Heroe by ID
  * @param key$
  */
   getHeroe(key$: string) {
