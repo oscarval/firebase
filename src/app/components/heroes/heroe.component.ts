@@ -3,6 +3,8 @@ import { NgForm } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { Heroe } from "../../interfaces/heroe.interface";
 import { HeroesService } from "../../services/heroes.service";
+import Swal from 'sweetalert2';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: "app-heroe",
@@ -40,33 +42,38 @@ export class HeroeComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
-  
+  ngOnInit() { }
+
   /**
    * Safe the data of Heroe
    */
   guardar() {
+    let peticion: Observable<any>;
     if (this.id === "nuevo") {
       // insertar
-      this.heroeServices.nuevoHeroe(this.heroe).subscribe(
-        data => {
-          this.router.navigate(["/heroe", data.name]);
-        },
-        error => {
-          console.log(error);
-        }
-      );
+      peticion = this.heroeServices.nuevoHeroe(this.heroe);
     } else {
       // actualizar
-      this.heroeServices.actualizarHeroe(this.heroe, this.id).subscribe(
-        data => {
-          console.log(data);
-        },
-        error => {
-          console.log(error);
-        }
-      );
+      peticion = this.heroeServices.actualizarHeroe(this.heroe, this.id);
     }
+
+    peticion.subscribe(
+      data => {
+        Swal.fire({
+          title: this.heroe.nombre,
+          text: 'Se actulizó correctamente',
+          type: 'success'
+        }).then(resp => {
+          if (data.name) {
+            this.router.navigate(["/heroe", data.name]);
+          }
+        })
+      },
+      error => {
+        console.log(error);
+      }
+    );
+
   }
   /**
    * Navigate to the page insert new heroe

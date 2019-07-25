@@ -6,7 +6,7 @@ import "rxjs";
 @Injectable()
 export class HeroesService {
   heroesURL: string = "https://heroesapp-6522e.firebaseio.com/heroes.json";
-  heroeURL: string = "https://heroesapp-6522e.firebaseio.com/heroes/";
+  heroeURL: string = "https://heroesapp-6522e.firebaseio.com/heroes";
   constructor(private http: Http) { }
 
   /**
@@ -37,7 +37,7 @@ export class HeroesService {
 
     let url = `${this.heroeURL}/${key$}.json`;
 
-    return this.http.put(this.heroesURL, body, { headers }).map(res => {
+    return this.http.put(url, body, { headers }).map(res => {
       return res.json();
     });
   }
@@ -67,8 +67,25 @@ export class HeroesService {
     });
   }
 
+  /**
+   * Delete the Heroe by ID
+   * @param key$
+   */
+  deleteHeroe(key$: string) {
+    let headers = new Headers({
+      "Content-Type": "application/json"
+    });
+    let url = `${this.heroeURL}/${key$}.json`;
+    return this.http.delete(url, { headers }).map(res => {
+      return res.json();
+    });
+  }
+
+
   private createArray(heroesObj: object) {
     const heroes: Heroe[] = [];
+
+    if (heroesObj === null) { return []; }
 
     Object.keys(heroesObj).forEach(key => {
       const heroe: Heroe = heroesObj[key];
@@ -76,7 +93,7 @@ export class HeroesService {
       heroes.push(heroe);
     });
 
-    if (heroesObj === null) { return []; }
+
 
     return heroes;
   }
